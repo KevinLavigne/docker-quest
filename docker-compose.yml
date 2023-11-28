@@ -1,0 +1,23 @@
+services:
+    server:
+        image: kevinlavigne/express-docker
+        restart: always
+        healthcheck:
+          test: [ "CMD", "ping", "-h", "127.0.0.1:5000", "--silent" ]
+          interval: 3s
+          retries: 5
+          start_period: 30s
+        ports: 
+            - 5050:5000
+        volumes: 
+            - ./server/src/:/app/src/
+        links:
+          - "mongodb:database"
+    mongodb:
+        image: mongo
+        volumes: 
+          - ./data:/data/db
+    client:
+      build: ./client
+      ports: 
+        - 8080:80
